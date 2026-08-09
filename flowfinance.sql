@@ -1,0 +1,23 @@
+CREATE DATABASE IF NOT EXISTS flowfinance;
+
+USE flowfinance;
+
+CREATE TABLE IF NOT EXISTS users (
+
+    User_ID INT AUTO_INCREMENT PRIMARY KEY,
+
+    Name VARCHAR(100) NOT NULL,
+
+    Email VARCHAR(100) UNIQUE NOT NULL,
+
+    Phone VARCHAR(15),
+
+    Password VARCHAR(255) NOT NULL,
+
+    Business_Name VARCHAR(100),
+
+    Business_Type VARCHAR(100),
+
+    Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);

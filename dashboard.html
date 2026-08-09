@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FlowFinance Dashboard</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+
+    <header>
+    <nav class="navbar">
+
+        <div class="logo">
+            FlowFinance
+        </div>
+
+        <div>
+            <ul class="nav-links">
+
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+
+                <li><a href="transactions.html">Transactions</a></li>
+
+                <li><a href="reports.html">Reports</a></li>
+
+                <li><a href="insights.html">AI Insights</a></li>
+            </ul>
+                <button id="logoutBtn">Logout</button>
+            
+        </div>   
+    </nav>
+    </header>
+    <!-- Hero -->
+
+    <section class="hero">
+
+        <h1>Welcome Back 👋</h1>
+
+        <p>
+            Monitor your income, expenses and AI financial insights in one place.
+        </p>
+
+    </section>
+
+    <!-- Summary Cards -->
+
+    <section class="summary-grid">
+
+        <div class="card">
+
+            <h3>Total Income</h3>
+
+            <h2 id="income">₹0</h2>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Total Expense</h3>
+
+            <h2 id="expense">₹0</h2>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Balance</h3>
+
+            <h2 id="balance">₹0</h2>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Cash Flow</h3>
+
+            <h2 id="cashflow">₹0</h2>
+
+        </div>
+
+    </section>
+
+    <!-- Quick Actions -->
+
+    <section class="actions">
+
+        <a href="transactions.html" class="action-card">
+
+            <h3>Add Transaction</h3>
+
+            <p>Add Income or Expense</p>
+
+        </a>
+
+        <a href="reports.html" class="action-card">
+
+            <h3>Reports</h3>
+
+            <p>Download PDF Reports</p>
+
+        </a>
+
+        <a href="insights.html" class="action-card">
+
+            <h3>AI Insights</h3>
+
+            <p>Smart Financial Advice</p>
+
+        </a>
+
+    </section>
+
+    <!-- Charts -->
+
+    <section class="charts">
+
+        <div class="chart-box">
+
+            <h2>Financial Overview</h2>
+
+            <canvas id="financeChart"></canvas>
+
+        </div>
+
+        <div class="chart-box">
+
+            <h2>Expense Analysis</h2>
+
+            <canvas id="expenseChart"></canvas>
+
+        </div>
+
+    </section>
+
+    <!-- Recent Transactions -->
+
+    <section class="transactions">
+
+        <h2>Recent Transactions</h2>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Type</th>
+
+                        <th>Category</th>
+
+                        <th>Amount</th>
+
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="transactionTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- AI Insights -->
+
+    <section class="insight-box">
+
+        <h2>AI Insights</h2>
+
+        <p id="insight">
+
+            Loading AI Recommendation...
+
+        </p>
+
+    </section>
+
+    <!-- Footer -->
+
+    <footer>
+
+        <h2>FlowFinance</h2>
+
+        <p>AI Powered Business Finance Platform</p>
+
+        <p>© 2026 FlowFinance. All Rights Reserved.</p>
+
+    </footer>
+
+    <!-- Scripts -->
+
+    <script src="dashboard.js"></script>
+
+    <script>
+
+        document.getElementById("logoutBtn").onclick = function () {
+
+            localStorage.clear();
+
+            window.location.href = "login.html";
+
+        };
+
+    </script>
+
+</body>
+
+</html>

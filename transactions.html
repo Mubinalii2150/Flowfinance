@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Transactions | FlowFinance</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- Transaction CSS -->
+    <link rel="stylesheet"
+          href="transactions.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     NAVBAR
+========================================= -->
+
+<header>
+    
+ <nav class="navbar">
+
+        <div class="logo">
+         FlowFinance
+        </div>
+        <div>
+        <ul class="nav-links">
+
+            <li><a href="dashboard.html">Dashboard</a></li>
+
+            <li><a href="transaction.html"class="active">Transactions</a></li>
+
+            <li><a href="reports.html">Reports</a></li>
+
+            <li><a href="insights.html" >AI Insights</a></li>
+
+        </ul>
+        <button id="logoutBtn">
+            Logout
+        </button>
+        </div>
+      </nav>
+</header>
+
+<!-- =========================================
+     PAGE HEADER
+========================================= -->
+<main class="container">
+<section class="page-header">
+
+    <div>
+
+        <span class="eyebrow">
+            FINANCIAL RECORDS
+        </span>
+
+        <h1>
+            Transactions
+        </h1>
+
+        <p>
+            Add, manage and review your income
+            and expense transactions.
+        </p>
+
+    </div>
+
+
+    <button
+        type="button"
+        id="openModalBtn"
+        class="primary-btn">
+
+        + Add Transaction
+
+    </button>
+
+</section>
+
+
+
+<!-- =========================================
+     SUMMARY CARDS
+========================================= -->
+
+<section class="summary-grid">
+
+
+    <div class="summary-card income-card">
+
+        <div class="summary-icon">
+            ↗
+        </div>
+
+        <div>
+
+            <span>
+                Total Income
+            </span>
+
+            <h2 id="totalIncome">
+                ₹0.00
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="summary-card expense-card">
+
+        <div class="summary-icon">
+            ↘
+        </div>
+
+        <div>
+
+            <span>
+                Total Expense
+            </span>
+
+            <h2 id="totalExpense">
+                ₹0.00
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="summary-card balance-card">
+
+        <div class="summary-icon">
+            ₹
+        </div>
+
+        <div>
+
+            <span>
+                Balance
+            </span>
+
+            <h2 id="totalBalance">
+                ₹0.00
+            </h2>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================
+     TRANSACTION SECTION
+========================================= -->
+
+<section class="transactions-card">
+
+
+    <div class="section-header">
+
+        <div>
+
+            <span class="card-label">
+                TRANSACTION HISTORY
+            </span>
+
+            <h2>
+                Recent Transactions
+            </h2>
+
+        </div>
+
+
+        <div class="transaction-actions">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search transactions..."
+            >
+
+
+            <select id="typeFilter">
+
+                <option value="all">
+                    All Types
+                </option>
+
+                <option value="Income">
+                    Income
+                </option>
+
+                <option value="Expense">
+                    Expense
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         TABLE
+    ========================================== -->
+
+    <div class="table-wrapper">
+
+        <table class="transaction-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Category
+                    </th>
+
+                    <th>
+                        Type
+                    </th>
+
+                    <th>
+                        Description
+                    </th>
+
+                    <th>
+                        Amount
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="transactionTable">
+
+                <tr>
+
+                    <td colspan="6"
+                        class="loading-row">
+
+                        Loading transactions...
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================
+     ADD TRANSACTION MODAL
+========================================= -->
+
+<div
+    class="modal-overlay"
+    id="transactionModal">
+
+
+    <div class="modal-box">
+
+
+        <!-- Modal Header -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="card-label">
+                    NEW RECORD
+                </span>
+
+                <h2>
+                    Add Transaction
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="closeModalBtn"
+                class="close-btn">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =====================================
+             ADD TRANSACTION FORM
+        ====================================== -->
+
+        <form
+            id="transactionForm">
+
+
+            <!-- TYPE -->
+
+            <div class="form-group">
+
+                <label for="transactionType">
+                    Transaction Type
+                </label>
+
+
+                <select
+                    id="transactionType"
+                    name="Type"
+                    required>
+
+                    <option value="">
+                        Select Type
+                    </option>
+
+                    <option value="Income">
+                        Income
+                    </option>
+
+                    <option value="Expense">
+                        Expense
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- CATEGORY -->
+
+            <div class="form-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+
+                <input
+                    type="text"
+                    id="category"
+                    name="Category"
+                    placeholder="e.g. Salary, Food, Travel"
+                    required>
+
+            </div>
+
+
+
+            <!-- AMOUNT -->
+
+            <div class="form-group">
+
+                <label for="amount">
+                    Amount
+                </label>
+
+
+                <div class="amount-input">
+                              
+                    <input
+                        type="number"
+                        id="amount"
+                        name="Amount"
+                        placeholder=" ₹0.00"
+                        min="0.01"
+                        step="0.01"
+                        required>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- DATE -->
+
+            <div class="form-group">
+
+                <label for="transactionDate">
+                    Date
+                </label>
+
+
+                <input
+                    type="date"
+                    id="transactionDate"
+                    name="Transaction_Date"
+                    required>
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+
+                <textarea
+                    id="description"
+                    name="Description"
+                    rows="3"
+                    placeholder="Add a short description..."></textarea>
+
+            </div>
+
+
+
+            <!-- FORM BUTTONS -->
+
+            <div class="form-buttons">
+
+
+                <button
+                    type="button"
+                    id="cancelBtn"
+                    class="secondary-btn">
+
+                    Cancel
+
+                </button>
+
+
+
+                <button
+                    type="submit"
+                    id="saveTransactionBtn"
+                    class="primary-btn">
+
+                    Save Transaction
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================
+     DELETE CONFIRMATION
+========================================= -->
+
+<div class="modal-overlay"
+     id="deleteModal">
+
+
+    <div class="confirm-box">
+
+
+        <div class="warning-icon">
+            !
+        </div>
+
+
+        <h2>
+            Delete Transaction?
+        </h2>
+
+
+        <p>
+            This transaction will be permanently
+            removed from your records.
+        </p>
+
+
+        <div class="form-buttons">
+
+
+            <button
+                type="button"
+                id="cancelDeleteBtn"
+                class="secondary-btn">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                type="button"
+                id="confirmDeleteBtn"
+                class="delete-btn">
+
+                Delete
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================
+     TOAST MESSAGE
+========================================= -->
+
+<span id="toastMessage">
+    Transaction saved successfully.
+</span>
+
+</main>
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+
+<footer>
+
+    <div>
+
+        <h2>
+            FlowFinance
+        </h2>
+
+        <p>
+            AI Powered Business Finance Platform
+        </p>
+
+    </div>
+
+
+    <p>
+        © 2026 FlowFinance
+    </p>
+
+</footer>
+
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script src="transactions.js"></script>
+
+
+</body>
+
+</html>
