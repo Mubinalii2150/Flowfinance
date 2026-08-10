@@ -9,39 +9,22 @@ const insightRoute = require("./insightRoute");
 
 const app = express();
 
-// ==========================
-// MIDDLEWARE
-// ==========================
-
 app.use(cors());
 app.use(express.json());
 
-// ==========================
-// FRONTEND FILES
-// ==========================
-
+// Serve HTML, CSS, JS, images
 app.use(express.static(__dirname));
 
-// ==========================
-// API ROUTES
-// ==========================
-
+// API routes
 app.use("/api/auth", authRoute);
 app.use("/api/transaction", transactionRoute);
 app.use("/api/report", reportRoute);
 app.use("/api/insight", insightRoute);
 
-// ==========================
-// HOME
-// ==========================
-
+// Home page
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
-
-// ==========================
-// SERVER
-// ==========================
 
 const PORT = 5000;
 
