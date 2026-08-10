@@ -1,21 +1,21 @@
 const mysql = require("mysql2");
 
 const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "mubinali2150@",
-    database: "flowfinance"
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT || 3306
 });
 
 connection.connect((err) => {
 
     if (err) {
-        console.log(err);
+        console.error("Database connection error:", err);
         return;
     }
 
     console.log("Database Connected");
-
 });
 
 module.exports = connection;
