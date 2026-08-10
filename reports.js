@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // --------------------------------------------------
 
     const userId = localStorage.getItem("userId");
-
+    const API_URL = "/api/report";
     if (!userId) {
         alert("Please login first.");
         window.location.href = "login.html";
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
 
             const url =
-                `http://localhost:5000/api/report/${userId}?filter=${encodeURIComponent(filter)}`;
+                        `${API_URL}/${userId}?filter=${encodeURIComponent(filter)}`;
 
             console.log("Summary URL:", url);
 
@@ -282,10 +282,9 @@ document.addEventListener("DOMContentLoaded", () => {
     async function loadCategories(filter) {
 
         try {
-
-            const url =
-                `http://localhost:5000/api/report/category/${userId}?filter=${encodeURIComponent(filter)}`;
-
+             const url =
+                       `${API_URL}/category/${userId}?filter=${encodeURIComponent(filter)}`;
+            
             console.log("Category URL:", url);
 
             const response = await fetch(url);
@@ -412,8 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
 
             const url =
-                `http://localhost:5000/api/report/transactions/${userId}?filter=${encodeURIComponent(filter)}`;
-
+                      `${API_URL}/transactions/${userId}?filter=${encodeURIComponent(filter)}`;
             console.log("Transactions URL:", url);
 
             const response = await fetch(url);

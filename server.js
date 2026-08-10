@@ -9,42 +9,42 @@ const insightRoute = require("./insightRoute");
 
 const app = express();
 
-// ===============================
-// MIDDLEWARE
-// ===============================
-
 app.use(cors());
 app.use(express.json());
 
-// ===============================
-// STATIC FRONTEND FILES
-// ===============================
+// ==========================================
+// FRONTEND
+// ==========================================
 
 app.use(express.static(__dirname));
 
-// ===============================
+// ==========================================
 // API ROUTES
-// ===============================
+// ==========================================
 
 app.use("/api/auth", authRoute);
 app.use("/api/transaction", transactionRoute);
 app.use("/api/report", reportRoute);
 app.use("/api/insight", insightRoute);
 
-// ===============================
-// HOME PAGE
-// ===============================
+// ==========================================
+// HOME
+// ==========================================
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(
+        path.join(__dirname, "index.html")
+    );
 });
 
-// ===============================
+// ==========================================
 // SERVER
-// ===============================
+// ==========================================
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`FlowFinance Server Running on port ${PORT}`);
+    console.log(
+        `FlowFinance Server Running on port ${PORT}`
+    );
 });

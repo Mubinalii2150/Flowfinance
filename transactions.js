@@ -1,22 +1,7 @@
 // ==========================================
 // FlowFinance - Transactions
 // ==========================================
-const openModalBtn = document.getElementById("openModalBtn");
-const closeModalBtn = document.getElementById("closeModalBtn");
-const cancelBtn = document.getElementById("cancelBtn");
-const transactionModal = document.getElementById("transactionModal");
 
-openModalBtn.addEventListener("click", () => {
-    transactionModal.classList.add("show");
-});
-
-closeModalBtn.addEventListener("click", () => {
-    transactionModal.classList.remove("show");
-});
-
-cancelBtn.addEventListener("click", () => {
-    transactionModal.classList.remove("show");
-});
 const API_URL = "/api/transaction";
 
 let allTransactions = [];
@@ -35,22 +20,29 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Logged in User ID:", userId);
 
     if (!userId) {
+
         alert("Please Login First.");
+
         window.location.href = "login.html";
+
         return;
     }
 
+
     // Set today's date
-    const dateInput = document.getElementById("transactionDate");
+    const dateInput =
+        document.getElementById("transactionDate");
 
     if (dateInput) {
-        dateInput.value = new Date()
-            .toISOString()
-            .split("T")[0];
+
+        dateInput.value =
+            new Date()
+                .toISOString()
+                .split("T")[0];
     }
 
-    loadTransactions();
 
+    // Setup everything
     setupAddTransaction();
 
     setupModal();
@@ -60,6 +52,10 @@ document.addEventListener("DOMContentLoaded", () => {
     setupFilter();
 
     setupLogout();
+
+    // Load existing transactions
+    loadTransactions();
+
 });
 
 
@@ -69,20 +65,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadTransactions() {
 
-    const userId = localStorage.getItem("userId");
+    const userId =
+        localStorage.getItem("userId");
 
-    const table = document.getElementById("transactionTable");
+    const table =
+        document.getElementById("transactionTable");
+
 
     if (!userId) {
+
         alert("Please Login First.");
-        window.location.href = "login.html";
+
+        window.location.href =
+            "login.html";
+
         return;
     }
 
+
     if (!table) {
-        console.error("transactionTable not found");
+
+        console.error(
+            "transactionTable not found"
+        );
+
         return;
     }
+
 
     table.innerHTML = `
         <tr>
@@ -92,32 +101,57 @@ async function loadTransactions() {
         </tr>
     `;
 
+
     try {
 
-        const response = await fetch(
-            `${API_URL}/${userId}`
+        const response =
+            await fetch(
+                `${API_URL}/${userId}`
+            );
+
+
+        console.log(
+            "GET status:",
+            response.status
         );
 
-        console.log("GET status:", response.status);
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
-        console.log("GET transactions response:", data);
 
-        if (!response.ok || !data.success) {
+        console.log(
+            "GET transactions response:",
+            data
+        );
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
 
             throw new Error(
-                data.message || "Unable to load transactions."
+                data.message ||
+                "Unable to load transactions."
             );
         }
 
-        allTransactions = Array.isArray(data.data)
-            ? data.data
-            : [];
 
-        displayTransactions(allTransactions);
+        allTransactions =
+            Array.isArray(data.data)
+                ? data.data
+                : [];
 
-        updateSummary(allTransactions);
+
+        displayTransactions(
+            allTransactions
+        );
+
+
+        updateSummary(
+            allTransactions
+        );
 
     }
 
@@ -127,6 +161,7 @@ async function loadTransactions() {
             "LOAD TRANSACTIONS ERROR:",
             error
         );
+
 
         table.innerHTML = `
             <tr>
@@ -146,11 +181,16 @@ async function loadTransactions() {
 function displayTransactions(transactions) {
 
     const table =
-        document.getElementById("transactionTable");
+        document.getElementById(
+            "transactionTable"
+        );
+
 
     if (!table) return;
 
+
     table.innerHTML = "";
+
 
     if (
         !Array.isArray(transactions) ||
@@ -168,10 +208,12 @@ function displayTransactions(transactions) {
         return;
     }
 
+
     transactions.forEach(transaction => {
 
         const id =
             transaction.Transaction_ID;
+
 
         const date =
             transaction.Transaction_Date
@@ -180,20 +222,28 @@ function displayTransactions(transactions) {
                 ).split("T")[0]
                 : "-";
 
+
         const category =
             transaction.Category || "-";
+
 
         const type =
             transaction.Type || "-";
 
+
         const description =
             transaction.Description || "-";
 
+
         const amount =
-            Number(transaction.Amount || 0);
+            Number(
+                transaction.Amount || 0
+            );
+
 
         const row =
             document.createElement("tr");
+
 
         row.innerHTML = `
 
@@ -223,14 +273,20 @@ function displayTransactions(transactions) {
                     type="button"
                     class="delete-btn"
                     data-id="${id}">
+
                     Delete
+
                 </button>
 
             </td>
+
         `;
 
+
         table.appendChild(row);
+
     });
+
 
     setupDeleteButtons();
 }
@@ -243,7 +299,10 @@ function displayTransactions(transactions) {
 function setupAddTransaction() {
 
     const form =
-        document.getElementById("transactionForm");
+        document.getElementById(
+            "transactionForm"
+        );
+
 
     if (!form) {
 
@@ -254,6 +313,7 @@ function setupAddTransaction() {
         return;
     }
 
+
     console.log(
         "Transaction form found"
     );
@@ -263,8 +323,8 @@ function setupAddTransaction() {
         "submit",
         async function (event) {
 
-            // VERY IMPORTANT
             event.preventDefault();
+
 
             console.log(
                 "Transaction form submitted"
@@ -272,7 +332,9 @@ function setupAddTransaction() {
 
 
             const userId =
-                localStorage.getItem("userId");
+                localStorage.getItem(
+                    "userId"
+                );
 
 
             if (!userId) {
@@ -288,34 +350,74 @@ function setupAddTransaction() {
             }
 
 
-            const type =
+            const typeElement =
                 document.getElementById(
                     "transactionType"
-                ).value;
+                );
+
+
+            const categoryElement =
+                document.getElementById(
+                    "category"
+                );
+
+
+            const amountElement =
+                document.getElementById(
+                    "amount"
+                );
+
+
+            const dateElement =
+                document.getElementById(
+                    "transactionDate"
+                );
+
+
+            const descriptionElement =
+                document.getElementById(
+                    "description"
+                );
+
+
+            if (
+                !typeElement ||
+                !categoryElement ||
+                !amountElement ||
+                !dateElement ||
+                !descriptionElement
+            ) {
+
+                console.error(
+                    "One or more transaction form fields are missing."
+                );
+
+                alert(
+                    "Transaction form is incomplete."
+                );
+
+                return;
+            }
+
+
+            const type =
+                typeElement.value;
 
 
             const category =
-                document.getElementById(
-                    "category"
-                ).value.trim();
+                categoryElement.value.trim();
 
 
             const amount =
-                document.getElementById(
-                    "amount"
-                ).value;
+                amountElement.value;
 
 
             const date =
-                document.getElementById(
-                    "transactionDate"
-                ).value;
+                dateElement.value;
 
 
             const description =
-                document.getElementById(
-                    "description"
-                ).value.trim();
+                descriptionElement.value.trim();
 
 
             // ==================================
@@ -366,22 +468,28 @@ function setupAddTransaction() {
 
 
             // ==================================
-            // DATA TO SEND
+            // DATA
             // ==================================
 
             const transactionData = {
 
-                User_ID: Number(userId),
+                User_ID:
+                    Number(userId),
 
-                Type: type,
+                Type:
+                    type,
 
-                Category: category,
+                Category:
+                    category,
 
-                Amount: Number(amount),
+                Amount:
+                    Number(amount),
 
-                Description: description,
+                Description:
+                    description,
 
-                Transaction_Date: date
+                Transaction_Date:
+                    date
 
             };
 
@@ -410,7 +518,7 @@ function setupAddTransaction() {
             try {
 
                 // ==================================
-                // SEND TO SERVER
+                // POST REQUEST
                 // ==================================
 
                 const response =
@@ -473,17 +581,18 @@ function setupAddTransaction() {
                 );
 
 
-                // Clear form
+                // Reset form
                 form.reset();
 
 
-                // Set today's date
-                document.getElementById(
-                    "transactionDate"
-                ).value =
-                    new Date()
-                        .toISOString()
-                        .split("T")[0];
+                // Set today's date again
+                if (dateElement) {
+
+                    dateElement.value =
+                        new Date()
+                            .toISOString()
+                            .split("T")[0];
+                }
 
 
                 // Close modal
@@ -504,7 +613,8 @@ function setupAddTransaction() {
 
 
                 alert(
-                    error.message
+                    error.message ||
+                    "Unable to add transaction."
                 );
 
             }
@@ -537,15 +647,18 @@ function setupModal() {
             ".modal-overlay"
         );
 
+
     const openButton =
         document.getElementById(
             "openModalBtn"
         );
 
+
     const closeButton =
         document.getElementById(
             "closeModalBtn"
         );
+
 
     const cancelButton =
         document.getElementById(
@@ -574,7 +687,7 @@ function setupModal() {
     }
 
 
-    // OPEN
+    // OPEN MODAL
     if (openButton) {
 
         openButton.addEventListener(
@@ -590,7 +703,7 @@ function setupModal() {
     }
 
 
-    // CLOSE
+    // CLOSE BUTTON
     if (closeButton) {
 
         closeButton.addEventListener(
@@ -600,7 +713,7 @@ function setupModal() {
     }
 
 
-    // CANCEL
+    // CANCEL BUTTON
     if (cancelButton) {
 
         cancelButton.addEventListener(
@@ -621,6 +734,7 @@ function setupModal() {
 
                 closeModal();
             }
+
         }
     );
 }
@@ -636,6 +750,7 @@ function closeModal() {
         document.querySelector(
             ".modal-overlay"
         );
+
 
     if (modal) {
 
@@ -660,14 +775,15 @@ function setupDeleteButtons() {
 
     buttons.forEach(button => {
 
-        button.onclick = async () => {
+        button.onclick =
+            async () => {
 
-            const id =
-                button.dataset.id;
+                const id =
+                    button.dataset.id;
 
-            await deleteTransaction(id);
+                await deleteTransaction(id);
 
-        };
+            };
 
     });
 }
@@ -747,8 +863,10 @@ async function deleteTransaction(id) {
             error
         );
 
+
         alert(
-            error.message
+            error.message ||
+            "Unable to delete transaction."
         );
     }
 }
@@ -765,31 +883,34 @@ function updateSummary(transactions) {
     let expense = 0;
 
 
-    transactions.forEach(transaction => {
+    transactions.forEach(
+        transaction => {
 
-        const amount =
-            Number(
-                transaction.Amount || 0
-            );
-
-        const type =
-            String(
-                transaction.Type || ""
-            ).toLowerCase();
+            const amount =
+                Number(
+                    transaction.Amount || 0
+                );
 
 
-        if (type === "income") {
+            const type =
+                String(
+                    transaction.Type || ""
+                ).toLowerCase();
 
-            income += amount;
+
+            if (type === "income") {
+
+                income += amount;
+            }
+
+
+            if (type === "expense") {
+
+                expense += amount;
+            }
 
         }
-
-        if (type === "expense") {
-
-            expense += amount;
-        }
-
-    });
+    );
 
 
     const balance =
@@ -801,10 +922,12 @@ function updateSummary(transactions) {
             "totalIncome"
         );
 
+
     const expenseElement =
         document.getElementById(
             "totalExpense"
         );
+
 
     const balanceElement =
         document.getElementById(
@@ -815,21 +938,24 @@ function updateSummary(transactions) {
     if (incomeElement) {
 
         incomeElement.innerText =
-            "₹" + income.toFixed(2);
+            "₹" +
+            income.toFixed(2);
     }
 
 
     if (expenseElement) {
 
         expenseElement.innerText =
-            "₹" + expense.toFixed(2);
+            "₹" +
+            expense.toFixed(2);
     }
 
 
     if (balanceElement) {
 
         balanceElement.innerText =
-            "₹" + balance.toFixed(2);
+            "₹" +
+            balance.toFixed(2);
     }
 }
 
@@ -889,6 +1015,7 @@ function applyFilters() {
             "searchInput"
         );
 
+
     const typeFilter =
         document.getElementById(
             "typeFilter"
@@ -945,6 +1072,7 @@ function applyFilters() {
                     matchesSearch &&
                     matchesType
                 );
+
             }
         );
 

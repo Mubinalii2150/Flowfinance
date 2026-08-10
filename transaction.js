@@ -69,6 +69,10 @@ router.post("/", (req, res) => {
     } = req.body;
 
 
+    // ======================================
+    // VALIDATION
+    // ======================================
+
     if (
         !User_ID ||
         !Type ||
@@ -96,6 +100,10 @@ router.post("/", (req, res) => {
         });
     }
 
+
+    // ======================================
+    // INSERT QUERY
+    // ======================================
 
     const sql = `
         INSERT INTO transactions
@@ -152,7 +160,6 @@ router.post("/", (req, res) => {
 
         }
     );
-
 });
 
 
@@ -165,6 +172,8 @@ router.delete("/:id", (req, res) => {
 
     const id = req.params.id;
 
+    console.log("DELETE transaction:", id);
+
 
     const sql = `
         DELETE FROM transactions
@@ -176,7 +185,10 @@ router.delete("/:id", (req, res) => {
 
         if (err) {
 
-            console.error("DELETE ERROR:", err);
+            console.error(
+                "DELETE ERROR:",
+                err
+            );
 
             return res.status(500).json({
                 success: false,
@@ -195,13 +207,18 @@ router.delete("/:id", (req, res) => {
         }
 
 
+        console.log(
+            "DELETE SUCCESS:",
+            id
+        );
+
+
         return res.json({
             success: true,
             message: "Transaction deleted successfully."
         });
 
     });
-
 });
 
 
