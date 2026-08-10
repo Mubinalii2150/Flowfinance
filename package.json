@@ -1,20 +1,17 @@
 {
   "name": "flowfinance",
   "version": "1.0.0",
-  "description": "AI Powered Business Finance Platform",
+  "description": "FlowFinance",
   "main": "server.js",
-  
-  "author": "Mobin",
-  "license": "ISC",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "mysql2": "^3.23.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.1"
   }
- 
 }
