@@ -9,22 +9,48 @@ const insightRoute = require("./insightRoute");
 
 const app = express();
 
+
+// ==========================================
+// MIDDLEWARE
+// ==========================================
+
 app.use(cors());
+
 app.use(express.json());
 
-// Serve HTML, CSS and JS files
+
+// ==========================================
+// SERVE FRONTEND FILES
+// ==========================================
+
 app.use(express.static(__dirname));
 
-// API routes
+
+// ==========================================
+// API ROUTES
+// ==========================================
+
 app.use("/api/auth", authRoute);
+
 app.use("/api/transaction", transactionRoute);
+
 app.use("/api/report", reportRoute);
+
 app.use("/api/insight", insightRoute);
 
-// Home
+
+// ==========================================
+// HOME ROUTE
+// ==========================================
+
 app.get("/", (req, res) => {
     res.send("FlowFinance Server Running ✅");
 });
+
+
+// ==========================================
+// START SERVER
+// ==========================================
 
 const PORT = 5000;
 
