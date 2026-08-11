@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FlowFinance | Reports</title>
+
+    <link rel="stylesheet" href="reports.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header>
+      <nav class="navbar">
+
+        <div class="logo">
+         FlowFinance
+        </div>
+        <div>
+        <ul class="nav-links">
+
+            <li><a href="dashboard.html">Dashboard</a></li>
+
+            <li><a href="transaction.html">Transactions</a></li>
+
+            <li><a href="reports.html" class="active">Reports</a></li>
+
+            <li><a href="insights.html">AI Insights</a></li>
+
+        </ul>
+        <button id="logoutBtn">
+            Logout
+        </button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <h1>Financial Reports</h1>
+
+        <p>
+            Analyze your business performance with detailed reports and visual charts.
+        </p>
+
+    </section>
+
+    <!-- ================= FILTER ================= -->
+
+    <section class="filter-section">
+
+        <button class="filter-btn " data-filter="today">Today</button>
+
+        <button class="filter-btn" data-filter="week">This Week</button>
+
+        <button class="filter-btn" data-filter="month">This Month</button>
+
+        <button class="filter-btn" data-filter="year">This Year</button>
+
+    </section>
+
+    <!-- ================= SUMMARY ================= -->
+
+    <section class="summary">
+
+        <div class="card">
+
+            <h3>Total Income</h3>
+
+            <h2 id="income">
+                ₹0
+            </h2>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Total Expense</h3>
+
+            <h2 id="expense">
+                ₹0
+            </h2>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Balance</h3>
+
+            <h2 id="balance">
+                ₹0
+            </h2>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Savings</h3>
+
+            <h2 id="saving">
+                ₹0
+            </h2>
+
+        </div>
+
+    </section>
+
+    <!-- ================= CHARTS ================= -->
+
+    <section class="charts">
+
+        <div class="chart-box">
+
+            <h2>Income vs Expense</h2>
+
+            <canvas id="reportChart"></canvas>
+
+        </div>
+
+        <div class="chart-box">
+
+            <h2>Expense Categories</h2>
+
+            <canvas id="pieChart"></canvas>
+
+        </div>
+
+    </section>
+
+    <!-- ================= TABLE ================= -->
+
+    <section class="table-section">
+
+        <h2>Recent Transactions</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Category</th>
+
+                    <th>Type</th>
+
+                    <th>Amount</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="reportTable">
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <!-- ================= DOWNLOAD ================= -->
+
+    <section class="download">
+
+        <button id="downloadPdf">
+
+            📄 Download PDF Report
+
+        </button>
+
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <h3>FlowFinance</h3>
+
+        <p>
+
+            AI Powered Business Finance Platform
+
+        </p>
+
+        <p>
+
+            © 2026 FlowFinance
+
+        </p>
+
+    </footer>
+
+    <script src="reports.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="reports.js"></script>
+</body>
+
+</html>

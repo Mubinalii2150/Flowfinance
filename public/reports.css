@@ -1,0 +1,439 @@
+/* ===========================
+   Google Font & Reset
+=========================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    color:#222;
+}
+
+/* ===========================
+   Navbar
+=========================== */
+
+
+header{
+    width:100%;
+    height: 86px;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1000;
+    background:#0f172a;
+    box-shadow:0 2px 10px rgba(0,0,0,.2);
+}
+
+.navbar{
+
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:18px 0;
+}
+
+.logo{
+    color:#fff;
+    font-size:32px;
+    font-weight:700;
+}
+
+.nav-links{
+    padding-top: 7px;
+    display:flex;
+    list-style:none;
+    gap:30px;
+}
+
+.nav-links li a{
+    font-weight:500;
+    color:#fff;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active{
+    color:#38bdf8;
+}
+.navbar div{
+    gap: 30px;
+    display:inline-flex;
+}
+#logoutBtn{
+    background:#38bdf8;
+    color:#fff;
+    padding:10px 20px;
+    border-radius:25px;
+}
+
+#logoutBtn:hover{
+    
+    background:#0284c7;
+}
+
+
+/* ===========================
+ HERO
+=========================== */
+
+.hero{
+
+    /* margin-top:80px;  */
+    min-height:50vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    color:white;
+
+    background:linear-gradient(135deg,#2563eb,#0ea5e9);
+}
+
+.hero-content{
+
+    width:90%;
+    max-width:900px;
+}
+
+.hero h1{
+
+    font-size:55px;
+    margin-top: 138px;
+    margin-bottom:20px;
+}
+
+.hero p{
+
+    font-size:20px;
+    margin-top: 148px;
+    margin-bottom:25px;
+}
+
+.btn{
+
+    display:inline-block;
+    background:#fff;
+    color:#2563eb;
+    text-decoration:none;
+    padding:15px 35px;
+    border-radius:5px;
+    font-weight:600;
+    transition:.4s;
+}
+
+.btn:hover{
+
+    transform:translateY(-5px);
+
+    background:#0f172a;
+
+    color:white;
+}
+
+
+
+/* ===========================
+   Filter Buttons
+=========================== */
+
+.filter-section{
+    margin-top: 15px;
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-bottom:50px;
+    flex-wrap:wrap;
+}
+
+.filter-btn{
+    border:none;
+    background:#fff;
+    color:#2563eb;
+    padding:12px 25px;
+    border-radius:30px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.filter-btn:hover,
+.filter-btn.active{
+    background:#2563eb;
+    color:#fff;
+}
+/* ===========================
+   Summary Cards
+=========================== */
+
+.summary{
+    width:90%;
+    margin:0 auto 50px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:#fff;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+    border-left:6px solid #2563eb;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 15px 35px rgba(37,99,235,.25);
+}
+
+.card h3{
+    color:#6b7280;
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+.card h2{
+    color:#2563eb;
+    font-size:36px;
+    font-weight:700;
+}
+
+/* ===========================
+   Charts
+=========================== */
+
+.charts{
+    width:90%;
+    margin:0 auto 50px;
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:30px;
+}
+
+.chart-box{
+    background:#fff;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.chart-box h2{
+    margin-bottom:25px;
+    color:#1f2937;
+    font-size:26px;
+}
+
+.chart-box canvas{
+    width:100% !important;
+    height:350px !important;
+}
+
+/* ===========================
+   Responsive Charts
+=========================== */
+
+@media(max-width:900px){
+
+.charts{
+
+grid-template-columns:1fr;
+
+}
+
+.chart-box canvas{
+
+height:300px !important;
+
+}
+
+}
+/* ===========================
+   Recent Transactions Table
+=========================== */
+
+.table-section{
+    width:90%;
+    margin:0 auto 50px;
+    background:#fff;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.table-section h2{
+    margin-bottom:25px;
+    font-size:28px;
+    color:#1f2937;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    overflow:hidden;
+    border-radius:12px;
+}
+
+thead{
+    background:#2563eb;
+    color:#fff;
+}
+
+th{
+    padding:18px;
+    text-align:left;
+    font-size:16px;
+    font-weight:600;
+}
+
+td{
+    padding:16px;
+    border-bottom:1px solid #e5e7eb;
+    color:#4b5563;
+    font-size:15px;
+}
+
+tbody tr{
+    transition:.3s;
+}
+
+tbody tr:hover{
+    background:#f3f8ff;
+}
+
+/* ===========================
+   Download Button
+=========================== */
+
+.download{
+    text-align:center;
+    margin:50px 0;
+}
+
+#downloadPdf{
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    padding:16px 45px;
+    font-size:17px;
+    font-weight:600;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 8px 20px rgba(37,99,235,.3);
+}
+
+#downloadPdf:hover{
+    background:#1d4ed8;
+    transform:translateY(-4px);
+}
+
+/* ===========================
+   Footer
+=========================== */
+
+footer{
+    background:#111827;
+    color:#fff;
+    text-align:center;
+    padding:35px 20px;
+    margin-top:70px;
+}
+
+footer h3{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+footer p{
+    color:#d1d5db;
+    margin:6px 0;
+    font-size:15px;
+}
+
+/* ===========================
+   Responsive Design
+=========================== */
+
+@media(max-width:768px){
+
+.navbar{
+    flex-direction:column;
+    height:auto;
+    padding:20px;
+}
+
+.nav-links{
+    margin:20px 0;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:15px;
+}
+
+.hero h1{
+    font-size:34px;
+}
+
+.hero p{
+    font-size:16px;
+}
+
+.summary{
+    grid-template-columns:1fr;
+}
+
+.table-section{
+    overflow-x:auto;
+}
+
+table{
+    min-width:650px;
+}
+
+#downloadPdf{
+    width:90%;
+}
+
+}
+
+@media(max-width:480px){
+
+.logo{
+    font-size:26px;
+}
+
+.hero h1{
+    font-size:28px;
+}
+
+.card h2{
+    font-size:28px;
+}
+
+.chart-box h2{
+    font-size:22px;
+}
+
+footer h3{
+    font-size:24px;
+}
+
+}
