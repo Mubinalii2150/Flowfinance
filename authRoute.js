@@ -1,12 +1,14 @@
 const express = require("express");
-const router = express.Router();
-
-const db = require("./db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const db = require("../database/db");
+
+const router = express.Router();
+
+
 // =======================
-// Register
+// REGISTER
 // =======================
 
 router.post("/register", async (req, res) => {
@@ -19,6 +21,13 @@ router.post("/register", async (req, res) => {
         Business_Name,
         Business_Type
     } = req.body;
+
+    if (!Name || !Email || !Password) {
+        return res.status(400).json({
+            success: false,
+            message: "Name, Email and Password are required."
+        });
+    }
 
     const checkSql =
         "SELECT * FROM users WHERE Email = ?";
@@ -94,7 +103,10 @@ router.post("/register", async (req, res) => {
 
         } catch (error) {
 
-            console.error("REGISTER ERROR:", error);
+            console.error(
+                "REGISTER ERROR:",
+                error
+            );
 
             return res.status(500).json({
                 success: false,
@@ -109,7 +121,7 @@ router.post("/register", async (req, res) => {
 
 
 // =======================
-// Login
+// LOGIN
 // =======================
 
 router.post("/login", (req, res) => {
@@ -191,15 +203,10 @@ router.post("/login", (req, res) => {
                 );
 
             return res.json({
-
                 success: true,
-
                 message: "Login Successful",
-
                 token: token,
-
                 userId: user.User_ID
-
             });
 
         } catch (error) {
@@ -220,5 +227,9 @@ router.post("/login", (req, res) => {
 
 });
 
+
+// =======================
+// EXPORT ROUTER
+// =======================
 
 module.exports = router;
