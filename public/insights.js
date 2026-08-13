@@ -4,20 +4,22 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     loadInsights();
+    setupRefresh();
+    setupLogout();
 });
 
 
 // ======================================
-// Load AI Insights
+// LOAD INSIGHTS
 // ======================================
 
 async function loadInsights() {
 
     const userId = localStorage.getItem("userId");
 
-    // -------------------------------
-    // Check Login
-    // -------------------------------
+    // ----------------------------------
+    // LOGIN CHECK
+    // ----------------------------------
 
     if (!userId) {
 
@@ -29,40 +31,67 @@ async function loadInsights() {
     }
 
 
-    // -------------------------------
-    // Get HTML Elements
-    // -------------------------------
+    // ----------------------------------
+    // HTML ELEMENTS
+    // ----------------------------------
 
-    const insightElement = document.getElementById("insight");
+    const incomeElement =
+        document.getElementById("income");
 
-    const balanceElement = document.getElementById("balance");
+    const expenseElement =
+        document.getElementById("expense");
+
+    const balanceElement =
+        document.getElementById("balance");
+
+    const insightElement =
+        document.getElementById("insight");
+
+    const healthIncomeElement =
+        document.getElementById("healthIncome");
+
+    const healthExpenseElement =
+        document.getElementById("healthExpense");
+
+    const healthStatusElement =
+        document.getElementById("healthStatus");
+
+    const healthTextElement =
+        document.getElementById("healthText");
+
+    const progressBar =
+        document.getElementById("progressBar");
+
+    const loadingElement =
+        document.getElementById("loading");
+
+    const insightContent =
+        document.getElementById("insightContent");
 
 
-    // -------------------------------
-    // Loading State
-    // -------------------------------
+    // ----------------------------------
+    // LOADING
+    // ----------------------------------
 
-    if (insightElement) {
-        insightElement.innerText = "Loading AI Recommendation...";
+    if (loadingElement) {
+        loadingElement.classList.remove("hidden");
     }
 
-    if (balanceElement) {
-        balanceElement.innerText = "Loading...";
+    if (insightContent) {
+        insightContent.classList.add("hidden");
     }
 
 
     try {
 
-        // -------------------------------
-        // API Request
-        // -------------------------------
+        // =================================
+        // API REQUEST
+        // =================================
 
         const response = await fetch(
-            `http://localhost:5000/api/insight/${userId}`
+            `/api/insight/${userId}`
         );
 
-
-        // Check HTTP status
 
         if (!response.ok) {
 
@@ -73,81 +102,239 @@ async function loadInsights() {
         }
 
 
-        // -------------------------------
-        // Convert Response to JSON
-        // -------------------------------
-
         const data = await response.json();
 
 
-        console.log("AI Insight Response:", data);
+        console.log(
+            "AI Insight Response:",
+            data
+        );
 
-
-        // -------------------------------
-        // Check API Response
-        // -------------------------------
 
         if (!data.success) {
 
-            if (insightElement) {
-                insightElement.innerText =
-                    "Unable to generate AI insight.";
-            }
+            throw new Error(
+                data.message || "Unable to load insights"
+            );
 
-            if (balanceElement) {
-                balanceElement.innerText = "₹0";
-            }
-
-            return;
         }
 
 
-        // -------------------------------
-        // Get Data
-        // -------------------------------
+        // =================================
+        // GET BACKEND DATA
+        // =================================
 
-        const result = data.data || data;
-
-
-        const income = Number(
-            result.Income ||
-            result.income ||
-            0
-        );
+        const result =
+            data.data || {};
 
 
-        const expense = Number(
-            result.Expense ||
-            result.expense ||
-            0
-        );
+        // IMPORTANT:
+        // Backend sends:
+        //
+        // income
+        // expense
+        // balance
+        // insights
+
+        const income =
+            Number(result.income || 0);
+
+        const expense =
+            Number(result.expense || 0);
+
+        const balance =
+            Number(result.balance || 0);
 
 
-        const balance = income - expense;
+        console.log("Income:", income);
+        console.log("Expense:", expense);
+        console.log("Balance:", balance);
 
 
-        // -------------------------------
-        // AI Suggestion
-        // -------------------------------
+        // =================================
+        // DISPLAY SUMMARY
+        // =================================
+
+        if (incomeElement) {
+
+            incomeElement.innerText =
+                formatCurrency(income);
+
+        }
+
+
+        if (expenseElement) {
+
+            expenseElement.innerText =
+                formatCurrency(expense);
+
+        }
+
+
+        if (balanceElement) {
+
+            balanceElement.innerText =
+                formatCurrency(balance);
+
+        }
+
+
+        // =================================
+        // HEALTH CARD
+        // =================================
+
+        if (healthIncomeElement) {
+
+            healthIncomeElement.innerText =
+                formatCurrency(income);
+
+        }
+
+
+        if (healthExpenseElement) {
+
+            healthExpenseElement.innerText =
+                formatCurrency(expense);
+
+        }
+
+
+        // =================================
+        // FINANCIAL HEALTH
+        // =================================
+
+        let healthPercentage = 0;
+
+        if (income > 0) {
+
+            healthPercentage =
+                ((income - expense) / income) * 100;
+
+        }
+
+
+        // Keep between 0 and 100
+
+        healthPercentage =
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    healthPercentage
+                )
+            );
+
+
+        if (progressBar) {
+
+            progressBar.style.width =
+                `${healthPercentage}%`;
+
+        }
+
+
+        if (healthStatusElement) {
+
+            if (income === 0 && expense === 0) {
+
+                healthStatusElement.innerText =
+                    "No Data";
+
+            }
+
+            else if (expense > income) {
+
+                healthStatusElement.innerText =
+                    "Needs Attention";
+
+            }
+
+            else if (expense === income) {
+
+                healthStatusElement.innerText =
+                    "Balanced";
+
+            }
+
+            else if (healthPercentage >= 30) {
+
+                healthStatusElement.innerText =
+                    "Excellent";
+
+            }
+
+            else if (healthPercentage >= 20) {
+
+                healthStatusElement.innerText =
+                    "Good";
+
+            }
+
+            else {
+
+                healthStatusElement.innerText =
+                    "Moderate";
+
+            }
+
+        }
+
+
+        if (healthTextElement) {
+
+            if (income === 0 && expense === 0) {
+
+                healthTextElement.innerText =
+                    "Add transactions to calculate your financial health.";
+
+            }
+
+            else if (expense > income) {
+
+                healthTextElement.innerText =
+                    "Your expenses are higher than your income. Review your spending.";
+
+            }
+
+            else {
+
+                healthTextElement.innerText =
+                    `You currently retain approximately ${healthPercentage.toFixed(1)}% of your income.`;
+
+            }
+
+        }
+
+
+        // =================================
+        // AI INSIGHT
+        // =================================
 
         let suggestion = "";
 
 
-        if (income === 0 && expense === 0) {
+        if (
+            income === 0 &&
+            expense === 0
+        ) {
 
             suggestion =
                 "💡 No financial transactions found. Add some income and expense transactions to receive financial insights.";
 
         }
 
-        else if (expense > income) {
+        else if (
+            expense > income
+        ) {
 
             suggestion =
                 "⚠️ Warning! Your expenses are higher than your income. Try reducing unnecessary expenses and review your spending.";
 
         }
 
-        else if (expense === income) {
+        else if (
+            expense === income
+        ) {
 
             suggestion =
                 "⚠️ Your income and expenses are equal. You are not saving money. Try to keep some amount aside as savings.";
@@ -156,20 +343,26 @@ async function loadInsights() {
 
         else {
 
-            const saving = income - expense;
+            const saving =
+                income - expense;
+
 
             const savingPercentage =
                 (saving / income) * 100;
 
 
-            if (savingPercentage >= 30) {
+            if (
+                savingPercentage >= 30
+            ) {
 
                 suggestion =
                     "🎉 Excellent! You are maintaining a healthy balance between income and expenses. Keep maintaining this financial discipline.";
 
             }
 
-            else if (savingPercentage >= 20) {
+            else if (
+                savingPercentage >= 20
+            ) {
 
                 suggestion =
                     "👍 Good financial management. You are saving a reasonable portion of your income. Try to increase your savings gradually.";
@@ -186,30 +379,37 @@ async function loadInsights() {
         }
 
 
-        // -------------------------------
-        // Display Insight
-        // -------------------------------
+        // =================================
+        // DISPLAY INSIGHT
+        // =================================
 
         if (insightElement) {
 
-            insightElement.innerText = suggestion;
+            insightElement.innerText =
+                suggestion;
 
         }
 
 
-        // -------------------------------
-        // Display Balance
-        // -------------------------------
+        // =================================
+        // SHOW CONTENT
+        // =================================
 
-        if (balanceElement) {
+        if (loadingElement) {
 
-            balanceElement.innerText =
-                "₹" + balance.toFixed(2);
+            loadingElement.classList.add("hidden");
 
         }
+
+
+        if (insightContent) {
+
+            insightContent.classList.remove("hidden");
+
+        }
+
 
     }
-
 
     catch (error) {
 
@@ -219,14 +419,24 @@ async function loadInsights() {
         );
 
 
-        // -------------------------------
-        // Error Message
-        // -------------------------------
+        if (loadingElement) {
+
+            loadingElement.classList.add("hidden");
+
+        }
+
+
+        if (insightContent) {
+
+            insightContent.classList.remove("hidden");
+
+        }
+
 
         if (insightElement) {
 
             insightElement.innerText =
-                "Unable to connect to the FlowFinance server.";
+                "Unable to load financial insight.";
 
         }
 
@@ -234,32 +444,83 @@ async function loadInsights() {
         if (balanceElement) {
 
             balanceElement.innerText =
-                "₹0";
+                "₹0.00";
 
         }
 
     }
 
-};
+}
 
 
 // ======================================
-// Logout
+// REFRESH BUTTON
 // ======================================
 
-const logoutBtn =
-    document.getElementById("logoutBtn");
+function setupRefresh() {
+
+    const refreshBtn =
+        document.getElementById("refreshBtn");
 
 
-if (logoutBtn) {
+    if (refreshBtn) {
 
-    logoutBtn.addEventListener("click", () => {
+        refreshBtn.addEventListener(
+            "click",
+            () => {
 
-        localStorage.clear();
+                loadInsights();
 
-        window.location.href =
-            "login.html";
+            }
+        );
 
-    });
+    }
+
+}
+
+
+// ======================================
+// LOGOUT
+// ======================================
+
+function setupLogout() {
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+
+    if (logoutBtn) {
+
+        logoutBtn.addEventListener(
+            "click",
+            () => {
+
+                localStorage.clear();
+
+                window.location.href =
+                    "login.html";
+
+            }
+        );
+
+    }
+
+}
+
+
+// ======================================
+// CURRENCY
+// ======================================
+
+function formatCurrency(amount) {
+
+    return "₹" +
+        Number(amount || 0).toLocaleString(
+            "en-IN",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
 
 }
