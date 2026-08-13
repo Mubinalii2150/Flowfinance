@@ -1,229 +1,572 @@
 // =====================================
-// Check Login
+// FlowFinance - Dashboard
 // =====================================
 
-const userId = localStorage.getItem("userId");
+document.addEventListener("DOMContentLoaded", () => {
 
-if (!userId) {
-    alert("Please login first.");
-    window.location.href = "login.html";
-}
+    const userId = localStorage.getItem("userId");
 
-// =====================================
-// Logout
-// =====================================
+    if (!userId) {
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
 
-document.getElementById("logoutBtn").addEventListener("click", () => {
+    // =====================================
+    // Logout
+    // =====================================
 
-    localStorage.clear();
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    window.location.href = "login.html";
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.clear();
+            window.location.href = "login.html";
+        });
+    }
+
+    // =====================================
+    // Load Dashboard
+    // =====================================
+
+    loadDashboard(userId);
 
 });
 
-// =====================================
-// Dashboard Summary
-// =====================================
-
-fetch(`http://localhost:5000/api/report/${userId}`)
-
-.then(res => res.json())
-
-.then(data => {
-
-    if (!data.success) return;
-
-    const income = Number(data.data.Income || 0);
-    const expense = Number(data.data.Expense || 0);
-    const balance = income - expense;
-    const cashflow = income - expense;
-
-    document.getElementById("income").innerText = "₹" + income;
-    document.getElementById("expense").innerText = "₹" + expense;
-    document.getElementById("balance").innerText = "₹" + balance;
-    document.getElementById("cashflow").innerText = "₹" + cashflow;
-
-    createFinanceChart(income, expense);
-
-});
 
 // =====================================
-// Financial Overview Chart
+// LOAD DASHBOARD
 // =====================================
 
-function createFinanceChart(income, expense){
+async function loadDashboard(userId) {
 
-    const ctx = document.getElementById("financeChart");
+    try {
 
-    new Chart(ctx,{
+        console.log("Dashboard User ID:", userId);
 
-        type:"bar",
+        // ---------------------------------
+        // SUMMARY
+        // ---------------------------------
 
-        data:{
+        const summaryResponse = await fetch(
+            `/api/report/${userId}?filter=month`
+        );
 
-            labels:["Income","Expense"],
-
-            datasets:[{
-
-                label:"Financial Overview",
-
-                data:[income,expense],
-
-                backgroundColor:[
-                    "#22c55e",
-                    "#ef4444"
-                ],
-
-                borderRadius:10
-
-            }]
-
-        },
-
-        options:{
-
-            responsive:true,
-
-            plugins:{
-                legend:{
-                    display:false
-                }
-            }
-
+        if (!summaryResponse.ok) {
+            throw new Error(
+                `Summary HTTP Error: ${summaryResponse.status}`
+            );
         }
 
-    });
+        const summaryData = await summaryResponse.json();
 
-}
+        console.log("Dashboard Summary:", summaryData);
 
-// =====================================
-// Expense Pie Chart
-// =====================================
-
-fetch(`http://localhost:5000/api/report/category/${userId}`)
-
-.then(res=>res.json())
-
-.then(data=>{
-
-    if(!data.success) return;
-
-    const labels=[];
-    const amounts=[];
-
-    data.data.forEach(item=>{
-
-        labels.push(item.Category);
-        amounts.push(item.Total);
-
-    });
-
-    const ctx=document.getElementById("expenseChart");
-
-    new Chart(ctx,{
-
-        type:"pie",
-
-        data:{
-
-            labels:labels,
-
-            datasets:[{
-
-                data:amounts,
-
-                backgroundColor:[
-                    "#2563eb",
-                    "#22c55e",
-                    "#f59e0b",
-                    "#ef4444",
-                    "#8b5cf6",
-                    "#06b6d4",
-                    "#e11d48"
-                ]
-
-            }]
-
-        },
-
-        options:{
-
-            responsive:true
-
+        if (!summaryData.success) {
+            throw new Error("Summary API failed");
         }
 
-    });
+        const summary = summaryData.data || {};
 
-});
+        // IMPORTANT:
+        // report API uses totalIncome / totalExpense
 
-// =====================================
-// Recent Transactions
-// =====================================
+        const income = Number(
+            summary.totalIncome || 0
+        );
 
-fetch(`http://localhost:5000/api/transaction/${userId}`)
+        const expense = Number(
+            summary.totalExpense || 0
+        );
 
-.then(res=>res.json())
+        const balance = Number(
+            summary.balance ?? (income - expense)
+        );
 
-.then(data=>{
+        const cashflow = income - expense;
 
-    if(!data.success) return;
 
-    const table=document.getElementById("transactionTable");
+        // ---------------------------------
+        // DISPLAY SUMMARY
+        // ---------------------------------
 
-    table.innerHTML="";
+        const incomeElement =
+            document.getElementById("income");
 
-    data.data.slice(0,10).forEach(item=>{
+        const expenseElement =
+            document.getElementById("expense");
 
-        table.innerHTML+=`
+        const balanceElement =
+            document.getElementById("balance");
 
-        <tr>
+        const cashflowElement =
+            document.getElementById("cashflow");
 
-            <td>${item.Type}</td>
 
-            <td>${item.Category}</td>
+        if (incomeElement) {
+            incomeElement.innerText =
+                formatCurrency(income);
+        }
 
-            <td>₹${item.Amount}</td>
+        if (expenseElement) {
+            expenseElement.innerText =
+                formatCurrency(expense);
+        }
 
-            <td>${item.Transaction_Date.split("T")[0]}</td>
+        if (balanceElement) {
+            balanceElement.innerText =
+                formatCurrency(balance);
+        }
 
-        </tr>
+        if (cashflowElement) {
+            cashflowElement.innerText =
+                formatCurrency(cashflow);
+        }
 
-        `;
 
-    });
+        // ---------------------------------
+        // BAR CHART
+        // ---------------------------------
 
-});
+        createFinanceChart(
+            income,
+            expense
+        );
 
-// =====================================
-// AI Insights
-// =====================================
 
-fetch(`http://localhost:5000/api/insight/${userId}`)
+        // ---------------------------------
+        // CATEGORY
+        // ---------------------------------
 
-.then(res=>res.json())
+        await loadCategoryChart(userId);
 
-.then(data=>{
 
-    if(data.success){
+        // ---------------------------------
+        // TRANSACTIONS
+        // ---------------------------------
 
-        document.getElementById("insight").innerText=data.insight;
+        await loadTransactions(userId);
+
+
+        // ---------------------------------
+        // DASHBOARD INSIGHT
+        // ---------------------------------
+
+        await loadInsight(userId);
+
+
+    } catch (error) {
+
+        console.error(
+            "Dashboard Error:",
+            error
+        );
 
     }
 
-})
+}
 
-.catch(()=>{
-
-    document.getElementById("insight").innerText="No AI insight available.";
-
-});
 
 // =====================================
-// Auto Refresh Every 30 Seconds
+// FORMAT CURRENCY
 // =====================================
 
-setInterval(()=>{
+function formatCurrency(amount) {
 
-    location.reload();
+    return "₹" +
+        Number(amount || 0).toLocaleString(
+            "en-IN",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
 
-},30000);
+}
+
+
+// =====================================
+// FINANCIAL BAR CHART
+// =====================================
+
+function createFinanceChart(
+    income,
+    expense
+) {
+
+    const canvas =
+        document.getElementById("financeChart");
+
+    if (!canvas) {
+        console.warn(
+            "financeChart canvas not found"
+        );
+        return;
+    }
+
+    // Destroy old chart if exists
+
+    if (window.financeChartInstance) {
+        window.financeChartInstance.destroy();
+    }
+
+    window.financeChartInstance =
+        new Chart(canvas, {
+
+            type: "bar",
+
+            data: {
+
+                labels: [
+                    "Income",
+                    "Expense"
+                ],
+
+                datasets: [{
+
+                    label:
+                        "Financial Overview",
+
+                    data: [
+                        income,
+                        expense
+                    ],
+
+                    backgroundColor: [
+                        "#22c55e",
+                        "#ef4444"
+                    ],
+
+                    borderRadius: 10
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    }
+
+                }
+
+            }
+
+        });
+
+}
+
+
+// =====================================
+// CATEGORY PIE CHART
+// =====================================
+
+async function loadCategoryChart(userId) {
+
+    try {
+
+        const response = await fetch(
+            `/api/report/category/${userId}?filter=month`
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                `Category HTTP Error: ${response.status}`
+            );
+        }
+
+        const data =
+            await response.json();
+
+        console.log(
+            "Dashboard Categories:",
+            data
+        );
+
+        if (!data.success) {
+            return;
+        }
+
+        const labels = [];
+        const amounts = [];
+
+        (data.data || []).forEach(item => {
+
+            labels.push(
+                item.Category || "-"
+            );
+
+            amounts.push(
+                Number(item.Total || 0)
+            );
+
+        });
+
+
+        const canvas =
+            document.getElementById("expenseChart");
+
+        if (!canvas) {
+            return;
+        }
+
+
+        if (window.expenseChartInstance) {
+            window.expenseChartInstance.destroy();
+        }
+
+
+        window.expenseChartInstance =
+            new Chart(canvas, {
+
+                type: "pie",
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [{
+
+                        data: amounts,
+
+                        backgroundColor: [
+
+                            "#2563eb",
+                            "#22c55e",
+                            "#f59e0b",
+                            "#ef4444",
+                            "#8b5cf6",
+                            "#06b6d4",
+                            "#e11d48",
+                            "#14b8a6",
+                            "#f97316"
+
+                        ]
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true
+
+                }
+
+            });
+
+
+    } catch (error) {
+
+        console.error(
+            "Category Chart Error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================
+// RECENT TRANSACTIONS
+// =====================================
+
+async function loadTransactions(userId) {
+
+    try {
+
+        // IMPORTANT:
+        // Correct endpoint is report/transactions
+
+        const response = await fetch(
+            `/api/report/transactions/${userId}?filter=month`
+        );
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Transaction HTTP Error: ${response.status}`
+            );
+
+        }
+
+        const data =
+            await response.json();
+
+        console.log(
+            "Dashboard Transactions:",
+            data
+        );
+
+        if (!data.success) {
+            return;
+        }
+
+
+        const table =
+            document.getElementById(
+                "transactionTable"
+            );
+
+        if (!table) {
+            return;
+        }
+
+
+        table.innerHTML = "";
+
+
+        const transactions =
+            data.data || [];
+
+
+        if (transactions.length === 0) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="4">
+                        No transactions found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        transactions
+            .slice(0, 10)
+            .forEach(item => {
+
+                const date =
+                    item.Transaction_Date
+                        ? String(
+                            item.Transaction_Date
+                        ).split("T")[0]
+                        : "-";
+
+
+                table.innerHTML += `
+
+                    <tr>
+
+                        <td>
+                            ${item.Type || "-"}
+                        </td>
+
+                        <td>
+                            ${item.Category || "-"}
+                        </td>
+
+                        <td>
+                            ${formatCurrency(
+                                Number(item.Amount || 0)
+                            )}
+                        </td>
+
+                        <td>
+                            ${date}
+                        </td>
+
+                    </tr>
+
+                `;
+
+            });
+
+
+    } catch (error) {
+
+        console.error(
+            "Transaction Error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================
+// AI INSIGHT
+// =====================================
+
+async function loadInsight(userId) {
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/insight/${userId}`
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Insight HTTP Error: ${response.status}`
+            );
+
+        }
+
+        const data =
+            await response.json();
+
+        console.log(
+            "Dashboard Insight:",
+            data
+        );
+
+
+        const element =
+            document.getElementById(
+                "insight"
+            );
+
+        if (!element) {
+            return;
+        }
+
+
+        if (data.success) {
+
+            element.innerText =
+                data.insight ||
+                data.data?.insight ||
+                "No AI insight available.";
+
+        } else {
+
+            element.innerText =
+                "No AI insight available.";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Insight Error:",
+            error
+        );
+
+        const element =
+            document.getElementById(
+                "insight"
+            );
+
+        if (element) {
+
+            element.innerText =
+                "No AI insight available.";
+
+        }
+
+    }
+
+}

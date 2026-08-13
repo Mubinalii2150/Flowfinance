@@ -86,9 +86,8 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
 
             await Promise.all([
-                loadSummary(filter),
-                loadCategories(filter),
-                loadTransactions(filter)
+                 loadSummary(filter),
+                 loadCategories(filter)
             ]);
 
         } catch (error) {
@@ -103,52 +102,62 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==================================================
     // SUMMARY
     // ==================================================
+async function loadSummary(filter) {
 
-    async function loadSummary(filter) {
+    try {
 
-        try {
+        const url =
+            `${API_URL}/${userId}?filter=${encodeURIComponent(filter)}`;
 
-            const url =
-                        `${API_URL}/${userId}?filter=${encodeURIComponent(filter)}`;
+        console.log("Summary URL:", url);
+        
+        const response = await fetch(url);
 
-            console.log("Summary URL:", url);
-
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`HTTP Error: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            console.log("Summary:", data);
-
-            if (!data.success) {
-                throw new Error("Unable to load summary");
-            }
-
-            const income = Number(data.data.Income || 0);
-            const expense = Number(data.data.Expense || 0);
-
-            const balance = income - expense;
-
-            reportData.income = income;
-            reportData.expense = expense;
-            reportData.balance = balance;
-            reportData.saving = balance;
-
-            updateSummaryCards();
-
-            drawBarChart(income, expense);
-
-        } catch (error) {
-
-            console.error("Summary error:", error);
-
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
         }
+
+        const data = await response.json();
+
+        console.log("Summary:", data);
+
+        if (!data.success) {
+            throw new Error("Unable to load summary");
+        }
+
+        // API response:
+        // data.data.totalIncome
+        // data.data.totalExpense
+        // data.data.balance
+
+        const income = Number(data.data.totalIncome || 0);
+        const expense = Number(data.data.totalExpense || 0);
+        const balance = Number(data.data.balance || 0);
+
+        reportData.income = income;
+        reportData.expense = expense;
+        reportData.balance = balance;
+        reportData.saving = balance;
+
+        // Transactions also come from summary API
+        transactionData = data.data.transactions || [];
+
+        updateSummaryCards();
+
+        drawBarChart(income, expense);
+
+        displayTransactions();
+           reportData.transactions = data.data.transactions || [];
+           transactionData =reportData.transactions;
+
+   
+    } catch (error) {
+
+        console.error("Summary error:", error);
 
     }
 
+}
 
     // ==================================================
     // UPDATE SUMMARY CARDS
