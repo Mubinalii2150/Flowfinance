@@ -26,7 +26,7 @@ document.getElementById("registerForm").addEventListener("submit", function (e) 
 
     };
 
-    fetch("http://localhost:5000/api/auth/register", {
+    fetch("/api/auth/register", {
 
         method: "POST",
 

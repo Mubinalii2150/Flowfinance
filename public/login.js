@@ -11,7 +11,7 @@ function login(e) {
 
     };
 
-    fetch("http://localhost:5000/api/auth/login", {
+    fetch("/api/auth/login", {
 
         method: "POST",
 
