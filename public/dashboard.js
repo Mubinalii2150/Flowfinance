@@ -492,61 +492,75 @@ async function loadTransactions(userId) {
 
 }
 
-
 // =====================================
 // AI INSIGHT
 // =====================================
 
 async function loadInsight(userId) {
 
+    const element = document.getElementById("insight");
+
+    if (!element) {
+        console.warn("Insight element not found.");
+        return;
+    }
+
+    // Show loading message
+    element.innerText = "Loading AI recommendation...";
+
     try {
 
-        const response =
-            await fetch(
-                `/api/insight/${userId}`
-            );
+        const response = await fetch(
+            `/api/insight/${encodeURIComponent(userId)}`
+        );
 
         if (!response.ok) {
-
             throw new Error(
                 `Insight HTTP Error: ${response.status}`
             );
-
         }
 
-        const data =
-            await response.json();
+        const data = await response.json();
 
-        console.log(
-            "Dashboard Insight:",
-            data
-        );
+        console.log("Dashboard Insight API Response:", data);
 
+        // ---------------------------------
+        // Check all common response formats
+        // ---------------------------------
 
-        const element =
-            document.getElementById(
-                "insight"
-            );
+        const insight =
+            data.insight ||
+            data.message ||
+            data.recommendation ||
+            data.data?.insight ||
+            data.data?.message ||
+            data.data?.recommendation ||
+            data.data?.text ||
+            data.data?.analysis ||
+            data.data?.content ||
+            data.data?.result ||
+            data.data?.response ||
+            data.data?.[0]?.insight ||
+            data.data?.[0]?.message ||
+            data.data?.[0]?.recommendation ||
+            data.data?.[0]?.text ||
+            data.data?.[0]?.analysis;
 
-        if (!element) {
-            return;
-        }
+        if (data.success && insight) {
 
-
-        if (data.success) {
-
-            element.innerText =
-                data.insight ||
-                data.data?.insight ||
-                "No AI insight available.";
+            element.innerText = String(insight);
 
         } else {
 
+            console.warn(
+                "AI API returned no insight:",
+                data
+            );
+
             element.innerText =
-                "No AI insight available.";
+                "Add some income and expense transactions to receive personalized AI financial insights.";
 
         }
-
 
     } catch (error) {
 
@@ -555,17 +569,8 @@ async function loadInsight(userId) {
             error
         );
 
-        const element =
-            document.getElementById(
-                "insight"
-            );
-
-        if (element) {
-
-            element.innerText =
-                "No AI insight available.";
-
-        }
+        element.innerText =
+            "Unable to load AI insights right now. Please try again later.";
 
     }
 

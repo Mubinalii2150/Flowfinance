@@ -1,128 +1,151 @@
-/* ===========================
-   Google Font & Reset
-=========================== */
+/* ==========================================
+   GOOGLE FONT
+========================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+
+/* ==========================================
+   RESET
+========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    background:#f5f7fb;
-    color:#222;
+html {
+    scroll-behavior: smooth;
 }
 
-/* ===========================
-   Navbar
-=========================== */
-
-
-header{
-    width:100%;
-    height: 86px;
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:1000;
-    background:#0f172a;
-    box-shadow:0 2px 10px rgba(0,0,0,.2);
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f4f7fc;
+    color: #1e293b;
+    overflow-x: hidden;
 }
 
-.navbar{
 
-    width:90%;
-    max-width:1200px;
-    margin:auto;
+/* ==========================================
+   NAVBAR
+========================================== */
 
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    padding:18px 0;
+header {
+    width: 100%;
+    background: #0f172a;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
 }
 
-.logo{
-    color:#fff;
-    font-size:32px;
-    font-weight:700;
+.navbar {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+
+    min-height: 86px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
 }
 
-.nav-links{
-    padding-top: 7px;
-    display:flex;
-    list-style:none;
-    gap:30px;
+.logo {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
-.nav-links li a{
-    font-weight:500;
-    color:#fff;
-    text-decoration:none;
-    transition:.3s;
-}
-
-.nav-links li a:hover,
-.nav-links li a.active{
-    color:#38bdf8;
-}
-.navbar div{
+.navbar > div:last-child {
+    display: flex;
+    align-items: center;
     gap: 30px;
-    display:inline-flex;
-}
-#logoutBtn{
-    background:#38bdf8;
-    color:#fff;
-    padding:10px 20px;
-    border-radius:25px;
 }
 
-#logoutBtn:hover{
-    
-    background:#0284c7;
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    transition: 0.3s ease;
+    white-space: nowrap;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #38bdf8;
 }
 
 
-/* ===========================
- HERO
-=========================== */
+/* ==========================================
+   LOGOUT BUTTON
+========================================== */
 
-.hero{
+#logoutBtn {
+    border: none;
+    outline: none;
 
-    /* margin-top:80px;  */
-    min-height:50vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    background: #38bdf8;
+    color: #ffffff;
 
-    text-align:center;
+    padding: 12px 22px;
+    border-radius: 25px;
 
-    color:white;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
 
-    background:linear-gradient(135deg,#2563eb,#0ea5e9);
+    cursor: pointer;
+    white-space: nowrap;
+
+    transition: 0.3s ease;
 }
 
-.hero-content{
-
-    width:90%;
-    max-width:900px;
+#logoutBtn:hover {
+    background: #0284c7;
+    transform: translateY(-2px);
 }
 
-.hero h1{
 
-    font-size:55px;
-    margin-top: 138px;
-    margin-bottom:20px;
+/* ==========================================
+   HERO
+========================================== */
+
+.hero {
+    min-height: 390px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 70px 20px;
+
+    text-align: center;
+    color: #ffffff;
+
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
 }
 
-.hero p{
+.hero h1 {
+    font-size: clamp(38px, 5vw, 55px);
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
 
-    font-size:20px;
-    margin-top: 148px;
-    margin-bottom:25px;
+.hero p {
+    max-width: 750px;
+    font-size: clamp(16px, 2vw, 20px);
+    line-height: 1.7;
 }
 
 .btn{
@@ -369,125 +392,170 @@ footer p{
     font-size:15px;
 }
 
-/* ===========================
-   Responsive Design
-=========================== */
 
-@media(max-width:768px){
 
-.navbar{
-    flex-direction:column;
-    height:auto;
-    padding:20px;
-}
+/* ==========================================
+   MOBILE NAVBAR - EVERYTHING IN ONE ROW
+========================================== */
 
-.nav-links{
-    margin:20px 0;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:15px;
-}
-
-.hero h1{
-    font-size:34px;
-}
-
-.hero p{
-    font-size:16px;
-}
-
-.summary{
-    grid-template-columns:1fr;
-}
-
-.table-section{
-    overflow-x:auto;
-}
-
-table{
-    min-width:650px;
-}
-
-#downloadPdf{
-    width:90%;
-}
-
-}
-
-@media(max-width:480px){
-
-.logo{
-    font-size:26px;
-}
-
-.hero h1{
-    font-size:28px;
-}
-
-.card h2{
-    font-size:28px;
-}
-
-.chart-box h2{
-    font-size:22px;
-}
-
-footer h3{
-    font-size:24px;
-}
-
-}
 @media (max-width: 768px) {
 
-    .navbar,
-    .nav-links {
-        width: 100%;
-        box-sizing: border-box;
-    }
+    .navbar {
+        width: 94%;
+        min-height: auto;
 
-    .nav-links {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 16px;
-    }
-
-    .logout-btn {
-        width: auto;
-        min-width: 140px;
-        height: auto;
-        padding: 14px 24px;
-        position: static;
-        margin: 10px auto;
-    }
-
-    .hero {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 50px 20px;
-    }
-
-    .hero-content {
-        display: flex;
         flex-direction: column;
+        align-items: stretch;
+
+        padding: 15px 0;
+        gap: 15px;
+    }
+
+    .logo {
         text-align: center;
+        font-size: 28px;
     }
 
-    .hero h1 {
-        font-size: 40px;
+    .navbar > div:last-child {
         width: 100%;
-        margin: 0;
+
+        justify-content: center;
+
+        gap: 12px;
+
+        overflow-x: auto;
+        padding: 4px 2px 8px;
     }
 
-    .cards,
-    .stats-grid {
-        display: grid;
+    .nav-links {
+        gap: 16px;
+        flex-shrink: 0;
+    }
+
+    .nav-links a {
+        font-size: 13px;
+    }
+
+    #logoutBtn {
+        flex-shrink: 0;
+
+        padding: 9px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+    }
+
+    .container {
+        width: 92%;
+        padding: 35px 0 55px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-header h1 {
+        font-size: 30px;
+    }
+
+    .summary-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+    }
+
+    .transactions-card {
         padding: 20px;
     }
 
-    * {
-        max-width: 100%;
+    .transaction-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #searchInput,
+    #typeFilter {
+        width: 100%;
+    }
+
+    .form-buttons {
+        flex-wrap: wrap;
+    }
+}
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 480px) {
+
+    .navbar {
+        width: 92%;
+    }
+
+    .logo {
+        font-size: 25px;
+    }
+
+    .navbar > div:last-child {
+        justify-content: flex-start;
+    }
+
+    .nav-links {
+        gap: 13px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+    }
+
+    #logoutBtn {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .page-header h1 {
+        font-size: 27px;
+    }
+
+    .page-header p {
+        font-size: 14px;
+    }
+
+    .primary-btn {
+        width: 100%;
+    }
+
+    .summary-card {
+        padding: 20px;
+    }
+
+    .summary-card h2 {
+        font-size: 22px;
+    }
+
+    .transactions-card {
+        padding: 15px;
+    }
+
+    .modal-box {
+        padding: 20px;
+    }
+
+    .modal-header h2 {
+        font-size: 22px;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .form-buttons button {
+        width: 100%;
+    }
+
+    #toastMessage {
+        right: 15px;
+        bottom: 15px;
+
+        max-width: calc(100% - 30px);
     }
 }
