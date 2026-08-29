@@ -639,104 +639,102 @@ function setupAddTransaction() {
 // ==========================================
 // MODAL
 // ==========================================
+// ==========================================
+// MODAL
+// ==========================================
 
 function setupModal() {
 
     const modal =
-        document.querySelector(
-            ".modal-overlay"
-        );
-
+        document.querySelector(".modal-overlay");
 
     const openButton =
-        document.getElementById(
-            "openModalBtn"
-        );
-
+        document.getElementById("openModalBtn");
 
     const closeButton =
-        document.getElementById(
-            "closeModalBtn"
-        );
-
+        document.getElementById("closeModalBtn");
 
     const cancelButton =
-        document.getElementById(
-            "cancelBtn"
-        );
+        document.getElementById("cancelBtn");
 
 
-    console.log(
-        "Modal elements:",
-        {
-            modal,
-            openButton,
-            closeButton,
-            cancelButton
-        }
-    );
+    console.log("Modal elements:", {
+        modal,
+        openButton,
+        closeButton,
+        cancelButton
+    });
 
 
     if (!modal) {
-
-        console.error(
-            "modal-overlay not found"
-        );
-
+        console.error("modal-overlay not found");
         return;
     }
 
 
+    // ==========================================
     // OPEN MODAL
+    // ==========================================
+
     if (openButton) {
 
-        openButton.addEventListener(
-            "click",
-            () => {
+        openButton.addEventListener("click", () => {
 
-                modal.classList.add(
-                    "show"
-                );
+            console.log("Add Transaction button clicked");
 
-            }
-        );
+            modal.classList.add("active");
+
+        });
+
+    } else {
+
+        console.error("openModalBtn not found");
+
     }
 
 
+    // ==========================================
     // CLOSE BUTTON
+    // ==========================================
+
     if (closeButton) {
 
         closeButton.addEventListener(
             "click",
             closeModal
         );
+
     }
 
 
+    // ==========================================
     // CANCEL BUTTON
+    // ==========================================
+
     if (cancelButton) {
 
         cancelButton.addEventListener(
             "click",
             closeModal
         );
+
     }
 
 
-    // CLICK OUTSIDE
-    modal.addEventListener(
-        "click",
-        event => {
+    // ==========================================
+    // CLICK OUTSIDE MODAL
+    // ==========================================
 
-            if (
-                event.target === modal
-            ) {
+    modal.addEventListener("click", (event) => {
 
-                closeModal();
-            }
+        if (event.target === modal) {
+
+            closeModal();
 
         }
-    );
+
+    });
+
 }
 
 
@@ -747,18 +745,16 @@ function setupModal() {
 function closeModal() {
 
     const modal =
-        document.querySelector(
-            ".modal-overlay"
-        );
-
+        document.querySelector(".modal-overlay");
 
     if (modal) {
 
-        modal.classList.remove(
-            "show"
-        );
+        modal.classList.remove("active");
+
     }
+
 }
+
 
 
 // ==========================================
